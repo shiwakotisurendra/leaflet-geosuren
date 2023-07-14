@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Leaflet Map with Dragging GeoJSON, Properties Popup, Draw Controls, and
+      Coordinates Display
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.4/leaflet-search.min.css"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://raw.githubusercontent.com/gregallensworth/L.Control.BoxZoom/master/dist/leaflet-control-boxzoom.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.css"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gokertanrisever/leaflet-ruler@master/src/leaflet-ruler.css" integrity="sha384-P9DABSdtEY/XDbEInD3q+PlL+BjqPCXGcF8EkhtKSfSTr/dS5PBKa9+/PMkW2xsY" crossorigin="anonymous">  
+
+    <style>
+      #map {
+        height: 600px;
+      }
+      #boundingBox {
+        margin-top: 10px;
+      }
+      #coordinates {
+        margin-top: 10px;
+      }
+      #searchControl {
+        margin-top: 10px;
+      }
+      #geocoderControl {
+        margin-top: 10px;
+      }
+      #measureControl {
+        margin-top: 10px;
+      }
+      .leaflet-control-measure-interaction {
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map">
+      <div class="leaflet-control map-coordinate">
+        <div class="coordinate"></div>
+        <div id="geocoderControl"></div>
+        <div id="searchControl"></div>
+      </div>
+
+      <div id="measureControl"></div>
+    </div>
+
+    <br />
+    <label for="viewbox">Viewbox (comma-separated coordinates):</label>
+    <input type="text" id="viewbox" />
+    <button onclick="updateMapView()">Update Map View</button>
+    <div id="boundingBox"></div>
+    <div id="coordinates"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.4/leaflet-search.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/maneoverland/leaflet.WorldMiniMap@1.0.0/dist/Control.WorldMiniMap.js"
+      integrity="sha512-PFw8St3qenU1/dmwCfiYYN/bRcqY1p3+sBATR+rZ6622eyXOk/8izVtlmm/k8qW7KbRIJsku838WCV5LMs6FCg=="
+      crossorigin=""
+    ></script>
+
+    <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.3.1/leaflet-measure.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-control-geocoder/1.14.0/Control.Geocoder.min.js"></script> -->
+    <script src="https://raw.githubusercontent.com/gregallensworth/L.Control.BoxZoom/master/dist/leaflet-control-boxzoom.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/gh/gokertanrisever/leaflet-ruler@master/src/leaflet-ruler.js" integrity="sha384-N2S8y7hRzXUPiepaSiUvBH1ZZ7Tc/ZfchhbPdvOE5v3aBBCIepq9l+dBJPFdo1ZJ" crossorigin="anonymous"></script>
+
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.js"
+      charset="utf-8"
+    ></script> -->
+    <script>
+      var map = L.map("map", { fullscreenControl: true }).setView(
+        [51.505, -0.09],
+        8
+      );
+      //   map.addLayer(new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      //         {attribution:'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}
+      //         ));
+      var baseLayers = {
+        "Street Map": L.tileLayer(
+          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          {
+            maxZoom: 19,
+            attribution:
+              'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+          }
+        ),
+        "Satellite Map": L.tileLayer(
+          "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+          {
+            maxZoom: 19,
+            attribution:
+              'Map data &copy; <a href="https://www.mapbox.com/">Mapbox</a> contributors',
+            id: "mapbox/satellite-v9",
+            accessToken: "YOUR_MAPBOX_ACCESS_TOKEN",
+          }
+        ),
+        "HOT map": L.tileLayer(
+          "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+          {
+            maxZoom: 19,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>',
+          }
+        ),
+        OpenTopoMap: L.tileLayer(
+          "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+          {
+            maxZoom: 17,
+            attribution:
+              'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+          }
+        ),
+        "ESRI World Map": L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            attribution:
+              "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+          }
+        ),
+        CyclOSM: L.tileLayer(
+          "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+          {
+            maxZoom: 20,
+            attribution:
+              '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          }
+        ),
+        googleStreets: L.tileLayer(
+          "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+          {
+            maxZoom: 20,
+            subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          }
+        ),
+        googleSat: L.tileLayer(
+          "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+          {
+            maxZoom: 20,
+            subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          }
+        ),
+        googleHybrid: L.tileLayer(
+          "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}",
+          {
+            maxZoom: 20,
+            subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          }
+        ),
+        googleTerrain: L.tileLayer(
+          "http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}",
+          {
+            maxZoom: 20,
+            subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          }
+        ),
+      };
+
+      var OpenSeaMap = L.tileLayer(
+        "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
+        {
+          attribution:
+            'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors',
+        }
+      );
+      var overlayLayers = {
+        OpenSeaMap: OpenSeaMap,
+      };
+
+      L.control.layers(baseLayers, overlayLayers).addTo(map);
+
+      L.marker([51.5, -0.09]).addTo(map).bindPopup("Hello, I'm a marker!");
+
+    //   var bounds = L.latLngBounds([
+    //     [51.49, -0.12],
+    //     [51.51, -0.06],
+    //   ]);
+    //   map.fitBounds(bounds);
+
+      baseLayers["Street Map"].addTo(map);
+
+      L.control.ruler().addTo(map);
+    //   L.control.locate().addTo(map);
+
+      //   var miniMap = new L.Control.GlobeMiniMap(options).addTo(map);
+      var worldMiniMap = L.control
+        .worldMiniMap({
+          position: "bottomleft",
+          circleColor: "red",
+          style: {
+            opacity: 0.9,
+            border: "2px solid black",
+            borderRadius: "10px",
+            backgroundColor: "lightblue",
+          },
+        })
+        .addTo(map);
+
+      var geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+      })
+        .on("markgeocode", function (e) {
+          var bbox = e.geocode.bbox;
+          var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest(),
+          ]).addTo(map);
+          map.fitBounds(poly.getBounds());
+        })
+        .addTo(map);
+
+      // L.Control.geocoder().addTo(map);
+      //   L.Control.boxzoom({ position:'bottomright' }).addTo(map);
+
+      // var boxZoom = L.Control.boxzoom({ position:'topleft' }).addTo(map);
+
+      var dropContainer = document.getElementById("map");
+      dropContainer.addEventListener("dragover", handleDragOver, false);
+      dropContainer.addEventListener("drop", handleFileSelect, false);
+
+      function handleDragOver(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
+      }
+
+      function handleFileSelect(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var files = event.dataTransfer.files;
+        var file = files[0];
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var contents = e.target.result;
+          var geojsonLayer = L.geoJSON(JSON.parse(contents), {
+            onEachFeature: function (feature, layer) {
+              var tooltipContent = "<table>";
+              for (var prop in feature.properties) {
+                tooltipContent +=
+                  "<tr><th>" +
+                  prop +
+                  "</th><td>" +
+                  feature.properties[prop] +
+                  "</td></tr>";
+              }
+              tooltipContent += "</table>";
+              layer.bindTooltip(tooltipContent, { sticky: true });
+            },
+          });
+          geojsonLayer.addTo(map);
+        };
+        reader.readAsText(file);
+      }
+
+      function updateMapView() {
+        var viewboxInput = document.getElementById("viewbox").value;
+        var coordinates = viewboxInput.split(",");
+
+        if (coordinates.length !== 4) {
+          alert("Please enter four comma-separated coordinates.");
+          return;
+        }
+
+        var bounds = L.latLngBounds([
+          [parseFloat(coordinates[1]), parseFloat(coordinates[0])],
+          [parseFloat(coordinates[3]), parseFloat(coordinates[2])],
+        ]);
+        map.fitBounds(bounds);
+      }
+
+      var drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
+
+      var drawControl = new L.Control.Draw({
+        draw: {
+          polygon: true,
+          polyline: true,
+          rectangle: true,
+          circle: true,
+          marker: true,
+        },
+        edit: {
+          featureGroup: drawnItems,
+          remove: true,
+        },
+      });
+
+      map.addControl(drawControl);
+
+      var boundingBoxElement = document.getElementById("boundingBox");
+      var coordinatesElement = document.getElementById("coordinates");
+
+      map.on("draw:created", function (e) {
+        var layer = e.layer;
+        drawnItems.addLayer(layer);
+
+        var bounds = layer.getBounds();
+        var boundsString = "Bounding Box: " + bounds.toBBoxString();
+        boundingBoxElement.textContent = boundsString;
+      });
+
+      function onMapClick(e) {
+        L.popup()
+          .setLatLng(e.latlng)
+          .setContent(
+            "Lat:" +
+              e.latlng.lat.toFixed(6) +
+              "<br>  Long:" +
+              e.latlng.lng.toFixed(6)
+          )
+          .openOn(map);
+      }
+      map.on("click", onMapClick);
+      //   map.on("click", function (e) {
+
+      // L.marker([e.latlng.lat, e.latlng.lng])
+      //   .addTo(map)
+      //   .bindPopup("Lat: " + e.latlng.lat + ", " + " Lon: " + e.latlng.lng);
+      //   });
+
+      map.on("mousemove", function (e) {
+        $(".coordinate").html("Lat:" + e.latlng.lat + "  Long:" + e.latlng.lng);
+        var latlng = e.latlng;
+        var coordinatesString =
+          "Latitude, Longitude: " +
+          latlng.lat.toFixed(6) +
+          ", " +
+          latlng.lng.toFixed(6);
+        coordinatesElement.textContent = coordinatesString;
+      });
+
+      //   var searchControl = new L.Control.Search({
+      //     layer: drawnItems,
+      //     propertyName: "name",
+      //     initial: false,
+      //     collapsed: false,
+      //     textPlaceholder: "Search...",
+      //   });
+      //   searchControl.addTo(map);
+      //   searchControlElement.appendChild(searchControl.onAdd(map));
+
+      var mapId = document.getElementById("map");
+      function fullScreenView() {
+        mapId.requestFullscreen();
+      }
+
+      // L.control.fullscreen({
+      //   position: 'topright',
+      //   title: 'Fullscreen',
+      //   titleCancel: 'Exit Fullscreen',
+      // }).addTo(map);
+
+      var measureControl = new L.Control.Measure({
+        position: "topright",
+        primaryLengthUnit: "meters",
+        secondaryLengthUnit: "kilometers",
+        primaryAreaUnit: "sqmeters",
+        secondaryAreaUnit: "hectares",
+      });
+      measureControl.addTo(map);
+      measureControlElement.appendChild(measureControl.onAdd(map));
+
+      //positioning map scale
+      L.control
+        .scale({
+          position: "bottomright",
+        })
+        .addTo(map);
+    </script>
+  </body>
+</html>
