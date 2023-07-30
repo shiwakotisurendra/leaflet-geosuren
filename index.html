@@ -51,12 +51,12 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
 
     <link
       rel="stylesheet"
-      href="https://raw.githubusercontent.com/gregallensworth/L.Control.BoxZoom/master/dist/leaflet-control-boxzoom.css"
+      href="leaflet-control-boxzoom.css"
     />
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.css"
-    />
+    /> -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/gokertanrisever/leaflet-ruler@master/src/leaflet-ruler.css"
@@ -160,7 +160,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
     <!-- location button -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.4/dist/L.Control.Locate.min.css"
+      href="L.Control.Locate.css"
     />
     <script
       src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js"
@@ -170,7 +170,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.3.1/leaflet-measure.min.js"></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-control-geocoder/1.14.0/Control.Geocoder.min.js"></script> -->
-    <script src="https://raw.githubusercontent.com/gregallensworth/L.Control.BoxZoom/master/dist/leaflet-control-boxzoom.js"></script>
+    <script src="leaflet-control-boxzoom.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
@@ -698,6 +698,7 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
       L.control.measure({ position: "topright" }).addTo(map);
       L.control.browserPrint({ position: "topright" }).addTo(map);
       L.simpleMapScreenshoter({ position: "topright" }).addTo(map);
+      L.Control.boxzoom({ position:'topright'}).addTo(map);
     </script>
   </body>
 </html>
