@@ -526,18 +526,18 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
         boundingBoxElement.textContent = boundsString;
       });
 
-      function onMapClick(e) {
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(
-            "Lat:" +
-              e.latlng.lat.toFixed(6) +
-              "<br>  Long:" +
-              e.latlng.lng.toFixed(6)
-          )
-          .openOn(map);
-      }
-      map.on("click", onMapClick);
+      // function onMapClick(e) {
+      //   L.popup()
+      //     .setLatLng(e.latlng)
+      //     .setContent(
+      //       "Lat:" +
+      //         e.latlng.lat.toFixed(6) +
+      //         "<br>  Long:" +
+      //         e.latlng.lng.toFixed(6)
+      //     )
+      //     .openOn(map);
+      // }
+      // map.on("click", onMapClick);
 
         // map.on("click", function (e) {
 
@@ -604,7 +604,7 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
         var wayQuery = "way[" + overpassQuery + "](" + bounds + ");";
         var relationQuery = "relation[" + overpassQuery + "](" + bounds + ");";
         var query =
-          "?data=[out:xml][timeout:500];(" +
+          "?data=[out:json][timeout:500];(" +
           nodeQuery +
           wayQuery +
           relationQuery +
