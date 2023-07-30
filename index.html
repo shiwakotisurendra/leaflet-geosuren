@@ -609,7 +609,7 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
           wayQuery +
           relationQuery +
           ");out body;>;out skel qt;";
-        var baseUrl = "http://overpass-api.de/api/interpreter";
+        var baseUrl = "https://overpass-api.de/api/interpreter";
         var resultUrl = baseUrl + query;
         return resultUrl;
       }
