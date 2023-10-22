@@ -1,6 +1,6 @@
-# leaflet-geosuren
+# Interactive Web mapping using leaflet.js and its plugins
 
-## Go to [Website](https://shiwakotisurendra.github.io/leaflet-geosuren/)
+## Go to [Web App](https://shiwakotisurendra.github.io/leaflet-geosuren/)
 
 ### Leaflet web-map application 
 * with multiple base maps(osm,osmTOPO,openseamap,ESRIWorldImagery,Googlesatellite,Googlehybrid,Googlestreet)
