@@ -2,7 +2,7 @@
 
 ## Go to [Web App](https://shiwakotisurendra.github.io/leaflet-geosuren/)
 
-### Leaflet web-map application 
+### Leaflet web-map application..
 * with multiple base maps(osm,osmTOPO,openseamap,ESRIWorldImagery,Googlesatellite,Googlehybrid,Googlestreet)
 * draggable GeoJSON support (tooltip and popup)
 * mouseover latlon feature
