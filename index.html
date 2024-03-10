@@ -13,6 +13,11 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
     />
 
+
+
+    <script src="https://npmcdn.com/leaflet.path.drag/src/Path.Drag.js"></script>
+   <script src="Leaflet.Editable.js"></script>
+	  
     <!-- Include Font Awesome plugin -->
     <link
       rel="stylesheet"
@@ -179,8 +184,8 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
       charset="utf-8"
     ></script> -->
     <script>
-      var map = L.map("map", { fullscreenControl: true }).setView(
-        [51.505, -0.09],
+      var map = L.map("map", { fullscreenControl: true }, {editable: true}).setView(
+        [50.93, 6.96],
         8
       );
       //   map.addLayer(new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -381,7 +386,7 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
 
       L.control.layers(baseLayers, overlayLayers).addTo(map);
 
-      L.marker([51.5, -0.09]).addTo(map).bindPopup("Hello, I'm a marker!");
+      L.marker([50.93, 6.96]).addTo(map).bindPopup("Hello, I'm a marker!");
 
       //   var bounds = L.latLngBounds([
       //     [51.49, -0.12],
@@ -464,7 +469,9 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
               layer.bindTooltip(tooltipContent, { sticky: true });
             },
           });
+		
           geojsonLayer.addTo(map);
+	  geojsonLayer.enableedit();
         };
         reader.readAsText(file);
       }
