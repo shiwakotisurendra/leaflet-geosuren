@@ -7,14 +7,15 @@
     </title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
     />
 
-
-	  
     <!-- Include Font Awesome plugin -->
     <link
       rel="stylesheet"
@@ -51,10 +52,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
       href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
     />
 
-    <link
-      rel="stylesheet"
-      href="leaflet-control-boxzoom.css"
-    />
+    <link rel="stylesheet" href="leaflet-control-boxzoom.css" />
     <!-- <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.css"
@@ -111,25 +109,25 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
   </head>
   <body>
     <div id="map">
+
+      <button id="exportButton">Export</button>
       <div class="leaflet-control map-coordinate">
         <div class="coordinate"></div>
         <div id="geocoderControl"></div>
         <div id="searchControl"></div>
       </div>
       <div class="leaflet-control-container">
-        <div class="leaflet-top leaflet-right ">
+        <div class="leaflet-top leaflet-right">
           <div id="overpass-api-controls" class="leaflet-bar leaflet-control">
             <input id="query-textfield" value="leisure=playground" size="30" />
             <input id="query-button" type="button" value="Load" />
           </div>
         </div>
       </div>
-      
+
       <div id="measureControl"></div>
-      
     </div>
     <div id="coordinates" class="leaflet-coordinates"></div>
-    
 
     <br />
     <label for="viewbox">Viewbox (comma-separated coordinates):</label>
@@ -142,7 +140,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
     <script src="https://npmcdn.com/leaflet.path.drag/src/Path.Drag.js"></script>
-   <script src="Leaflet.Editable.js"></script>
+    <script src="Leaflet.Editable.js"></script>
     <script src="https://cdn.osmbuildings.org/classic/0.2.2b/OSMBuildings-Leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.4/leaflet-search.min.js"></script>
@@ -156,10 +154,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
     ></script>
 
     <!-- location button -->
-    <link
-      rel="stylesheet"
-      href="L.Control.Locate.css"
-    />
+    <link rel="stylesheet" href="L.Control.Locate.css" />
     <script
       src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js"
       charset="utf-8"
@@ -183,10 +178,11 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
       charset="utf-8"
     ></script> -->
     <script>
-      var map = L.map("map", { fullscreenControl: true }, {editable: true}).setView(
-        [50.93, 6.96],
-        8
-      );
+      var map = L.map(
+        "map",{ editable: true },
+        { fullscreenControl: true }
+        
+      ).setView([50.93, 6.96], 8);
       //   map.addLayer(new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       //         {attribution:'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}
       //         ));
@@ -199,7 +195,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
               'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
           }
         ),
-        "Satellite Map": L.tileLayer(
+       /* "Satellite Map": L.tileLayer(
           "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
           {
             maxZoom: 19,
@@ -208,8 +204,8 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
             id: "mapbox/satellite-v9",
             accessToken: "YOUR_MAPBOX_ACCESS_TOKEN",
           }
-        ),
-        "HOT map": L.tileLayer(
+        ),*/
+        OSM_HOT_Map: L.tileLayer(
           "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
           {
             maxZoom: 19,
@@ -233,7 +229,7 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
               'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           }
         ),
-        "Stadia Dark": L.tileLayer(
+        /*"Stadia Dark": L.tileLayer(
           "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
           {
             maxZoom: 20,
@@ -248,40 +244,38 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
             attribution:
               '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
           }
-        ),
-        StamenToner: L.tileLayer(
-          "https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}",
+        ),*/
+        CartoDB_Dark : L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 20
+        }),
+        CartoDB_DarkNoLabels : L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 20
+        }),
+        CartoDB_Voyager : L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 20
+        }),
+        CartoDB_Positron: L.tileLayer(
+          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
           {
             attribution:
-              'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: "abcd",
-            minZoom: 0,
             maxZoom: 20,
-            ext: "png",
           }
         ),
-        StamenWatercolor: L.tileLayer(
-          "https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}",
-          {
-            attribution:
-              'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            subdomains: "abcd",
-            minZoom: 1,
-            maxZoom: 16,
-            ext: "jpg",
-          }
-        ),
-        StamenTerrain: L.tileLayer(
-          "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}",
-          {
-            attribution:
-              'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            subdomains: "abcd",
-            minZoom: 0,
-            maxZoom: 18,
-            ext: "png",
-          }
-        ),
+         EsriWorldTerrain : L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS',
+          maxZoom: 13
+        }),
+        EsriWorldTopoMap : L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+        }),
         EsriWorldMap: L.tileLayer(
           "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
           {
@@ -310,15 +304,6 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
           {
             attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
             maxZoom: 16,
-          }
-        ),
-        CartoDB_Positron: L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-          {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 20,
           }
         ),
         CyclOSM: L.tileLayer(
@@ -357,19 +342,30 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
             subdomains: ["mt0", "mt1", "mt2", "mt3"],
           }
         ),
-        NASAGIBS_ViirsNight : L.tileLayer('https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}', {
-	attribution: 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
-	bounds: [[-85.0511287776, -179.999999975], [85.0511287776, 179.999999975]],
-	minZoom: 1,
-	maxZoom: 8,
-	format: 'jpg',
-	time: '',
-	tilematrixset: 'GoogleMapsCompatible_Level'
-}),
-USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}', {
-	maxZoom: 20,
-	attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
-}),
+        NASAGIBS_ViirsNight: L.tileLayer(
+          "https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}",
+          {
+            attribution:
+              'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+            bounds: [
+              [-85.0511287776, -179.999999975],
+              [85.0511287776, 179.999999975],
+            ],
+            minZoom: 1,
+            maxZoom: 8,
+            format: "jpg",
+            time: "",
+            tilematrixset: "GoogleMapsCompatible_Level",
+          }
+        ),
+        USGS_Imagery: L.tileLayer(
+          "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}",
+          {
+            maxZoom: 20,
+            attribution:
+              'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>',
+          }
+        ),
       };
 
       var OpenSeaMap = L.tileLayer(
@@ -383,6 +379,7 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
         OpenSeaMap: OpenSeaMap,
       };
 
+
       L.control.layers(baseLayers, overlayLayers).addTo(map);
 
       L.marker([50.93, 6.96]).addTo(map).bindPopup("Hello, I'm a marker!");
@@ -394,6 +391,7 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
       //   map.fitBounds(bounds);
 
       baseLayers["Street Map"].addTo(map);
+
 
       // L.control.ruler().addTo(map);
       //   L.control.locate().addTo(map);
@@ -428,10 +426,24 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
         })
         .addTo(map);
 
-      // L.Control.geocoder().addTo(map);
-      // L.Control.boxzoom({ position:'bottomright' }).addTo(map);
-
-      // var boxZoom = L.Control.boxzoom({ position:'topleft' }).addTo(map);
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+  
+        var drawControl = new L.Control.Draw({
+          draw: {
+            polygon: true,
+            polyline: true,
+            rectangle: true,
+            circle: true,
+            marker: true,
+          },
+          edit: {
+            featureGroup: drawnItems,
+            //remove: true,
+          },
+        });
+  
+        map.addControl(drawControl);
 
       var dropContainer = document.getElementById("map");
       dropContainer.addEventListener("dragover", handleDragOver, false);
@@ -441,6 +453,16 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
         event.stopPropagation();
         event.preventDefault();
         event.dataTransfer.dropEffect = "copy";
+      }
+
+      function addNonGroupLayers(sourceLayer, targetGroup) {
+        if (sourceLayer instanceof L.LayerGroup) {
+          sourceLayer.eachLayer(function(layer) {
+            addNonGroupLayers(layer, targetGroup);
+          });
+        } else {
+          targetGroup.addLayer(sourceLayer);
+        }
       }
 
       function handleFileSelect(event) {
@@ -468,9 +490,9 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
               layer.bindTooltip(tooltipContent, { sticky: true });
             },
           });
-		
-          geojsonLayer.addTo(map);
-	  geojsonLayer.enableEdit();
+          addNonGroupLayers(geojsonLayer, drawnItems); 
+          
+              //geojsonLayer.enableEdit();
         };
         reader.readAsText(file);
       }
@@ -490,25 +512,6 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
         ]);
         map.fitBounds(bounds);
       }
-
-      var drawnItems = new L.FeatureGroup();
-      map.addLayer(drawnItems);
-
-      var drawControl = new L.Control.Draw({
-        draw: {
-          polygon: true,
-          polyline: true,
-          rectangle: true,
-          circle: true,
-          marker: true,
-        },
-        edit: {
-          featureGroup: drawnItems,
-          remove: true,
-        },
-      });
-
-      map.addControl(drawControl);
 
       var boundingBoxElement = document.getElementById("boundingBox");
       var coordinatesElement = document.getElementById("coordinates");
@@ -535,50 +538,17 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
       }
       map.on("click", onMapClick);
 
-        // map.on("click", function (e) {
-
-      // L.marker([e.latlng.lat, e.latlng.lng])
-      //   .addTo(map)
-      //   .bindPopup("Lat: " + e.latlng.lat + ", " + " Lon: " + e.latlng.lng);
-      //   });
-
       map.on("mousemove", function (e) {
-    var lat = e.latlng.lat.toFixed(6);
-    var lng = e.latlng.lng.toFixed(6);
-    document.getElementById("coordinates").innerHTML =
-      "Lat: " + lat + ", Lng: " + lng;
-  });
-
-      //   var searchControl = new L.Control.Search({
-      //     layer: drawnItems,
-      //     propertyName: "name",
-      //     initial: false,
-      //     collapsed: false,
-      //     textPlaceholder: "Search...",
-      //   });
-      //   searchControl.addTo(map);
-      //   searchControlElement.appendChild(searchControl.onAdd(map));
+        var lat = e.latlng.lat.toFixed(6);
+        var lng = e.latlng.lng.toFixed(6);
+        document.getElementById("coordinates").innerHTML =
+          "Lat: " + lat + ", Lng: " + lng;
+      });
 
       var mapId = document.getElementById("map");
       function fullScreenView() {
         mapId.requestFullscreen();
       }
-
-      // L.control.fullscreen({
-      //   position: 'topright',
-      //   title: 'Fullscreen',
-      //   titleCancel: 'Exit Fullscreen',
-      // }).addTo(map);
-
-      // var measureControl = new L.Control.Measure({
-      //   position: "topright",
-      //   primaryLengthUnit: "meters",
-      //   secondaryLengthUnit: "kilometers",
-      //   primaryAreaUnit: "sqmeters",
-      //   secondaryAreaUnit: "hectares",
-      // });
-      // measureControl.addTo(map);
-      // measureControlElement.appendChild(measureControl.onAdd(map));
 
       //positioning map scale
       L.control
@@ -693,11 +663,11 @@ USGS_Imagery : L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services
       L.control.measure({ position: "topright" }).addTo(map);
       L.control.browserPrint({ position: "topright" }).addTo(map);
       L.simpleMapScreenshoter({ position: "topright" }).addTo(map);
-      L.Control.boxzoom({ position:'topright'}).addTo(map);
+      L.Control.boxzoom({ position: "topright" }).addTo(map);
     </script>
 
-<footer>
-  <p>&copy; 2023 Surendra Shiwakoti. All rights reserved.</p>
-</footer>
+    <footer>
+      <p>&copy; 2023 Surendra Shiwakoti. All rights reserved.</p>
+    </footer>
   </body>
 </html>
