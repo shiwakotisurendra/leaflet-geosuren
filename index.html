@@ -160,6 +160,9 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
       charset="utf-8"
     ></script>
 
+    <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script>
+    
+
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.3.1/leaflet-measure.min.js"></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-control-geocoder/1.14.0/Control.Geocoder.min.js"></script> -->
@@ -353,6 +356,8 @@ https://cdn.jsdelivr.net/npm/leaflet-measure@3.1/dist/leaflet-measure.min.css
 
 
       L.control.layers(baseLayers, overlayLayers).addTo(map);
+
+      
 
       L.marker([50.93, 6.96]).addTo(map).bindPopup("Hello, I'm a marker!");
 
